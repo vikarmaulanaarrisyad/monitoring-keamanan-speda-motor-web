@@ -1,45 +1,93 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <title>{{ config('app.name') }}</title>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" href="#" type="image/*">
 
-        <!-- Styles -->
-        @livewireStyles
-    </head>
-    <body class="font-sans antialiased">
-        <x-banner />
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE') }}/plugins/fontawesome-free/css/all.min.css">
+    @stack('css_vendor')
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE') }}/dist/css/adminlte.min.css">
+    <style>
+        .note-editor {
+            margin-bottom: 0;
+        }
 
-        <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+        .note-editor.is-invalid {
+            border-color: var(--danger);
+        }
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+        .nav-sidebar .nav-header {
+            font-size: .6rem;
+            font-weight: bold;
+            color: #888;
+        }
+    </style>
+    @stack('css')
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        @include('layouts.partials.header')
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        @include('layouts.partials.sidebar')
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">@yield('title')</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                @section('breadcrumb')
+                                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                @show
+                            </ol>
+                        </div>
                     </div>
-                </header>
-            @endif
+                </div>
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <div class="content">
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+            </div>
         </div>
 
-        @stack('modals')
+        <!-- Main Footer -->
+        @include('layouts.partials.footer')
+    </div>
+    <!-- ./wrapper -->
 
-        @livewireScripts
-    </body>
+    <!-- jQuery -->
+    <script src="{{ asset('/AdminLTE') }}/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('/AdminLTE') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts_vendor')
+    <!-- AdminLTE App -->
+    <script src="{{ asset('/AdminLTE') }}/dist/js/adminlte.min.js"></script>
+    <script src="{{ asset('/js/custom.js') }}"></script>
+
+    @stack('scripts')
+</body>
+
 </html>
