@@ -15,7 +15,7 @@
                      alt="User Image">
              </div>
              <div class="info">
-                 <a href="#" class="d-block">Alexander Pierce</a>
+                 <a href="javascript:void(0)" class="d-block">{{ auth()->user()->name }}</a>
              </div>
          </div>
 
@@ -65,12 +65,16 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link">
+                     <a href="javascript:void(0);" class="nav-link"
+                         onclick="document.querySelector('#form-logout').submit()">
                          <i class="nav-icon fas fa-sign-in-alt"></i>
                          <p>
                              Logout
                          </p>
                      </a>
+                     <form action="{{ route('logout') }}" method="post" id="form-logout">
+                         @csrf
+                     </form>
                  </li>
              </ul>
          </nav>
