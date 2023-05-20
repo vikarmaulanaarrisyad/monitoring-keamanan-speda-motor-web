@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiRelayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/relay/data',[ApiRelayController::class, 'data'])->name('api.relay_data');
+Route::get('/relay/{id}/update',[ApiRelayController::class, 'update'])->name('api.relay_update');
+
