@@ -25,7 +25,7 @@ class RelayController extends Controller
         return datatables($query)
             ->addIndexColumn()
             ->addColumn('keterangan', function ($query) {
-                if ($query->status != 0) {
+                if ($query->status == 0) {
                     return '
                        <p>
                         ' . $query->name_relay . ' Stat Aktif
@@ -39,7 +39,7 @@ class RelayController extends Controller
                     ';
             })
             ->addColumn('status', function ($query) {
-                if ($query->status == 0) {
+                if ($query->status != 0) {
                     return '
                         <span class="badge badge-md badge-danger">Tidak Aktif</span>
                     ';
@@ -49,7 +49,7 @@ class RelayController extends Controller
                     ';
             })
             ->addColumn('aksi', function ($query) {
-                if ($query->status == 1) {
+                if ($query->status == 0) {
                     return '
                         <button onclick="updateStatus(`' . route('relay.update_status', $query->id) . '`, `' . $query->name_relay  . '`)" class="btn btn-sm btn-success"><i class="fas fa-check-circle"></i> Aktifkan!</button>
                     ';
