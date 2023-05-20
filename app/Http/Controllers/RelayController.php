@@ -28,13 +28,13 @@ class RelayController extends Controller
                 if ($query->status != 0) {
                     return '
                        <p>
-                        ' . $query->name_relay . ' Status Tidak Aktif
+                        ' . $query->name_relay . ' Stat Aktif
                        </p>
                     ';
                 }
                 return '
                        <p>
-                        ' . $query->name_relay . ' Status Aktif
+                        ' . $query->name_relay . ' Status Tidak Aktif
                        </p>
                     ';
             })
