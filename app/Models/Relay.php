@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Vehicle extends Model
+class Relay extends Model
 {
     use HasFactory;
-    protected $table = 'vehicle';
+    protected $table = 'relay';
 }

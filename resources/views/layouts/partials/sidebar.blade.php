@@ -24,8 +24,9 @@
              <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                  data-accordion="false">
 
-                 <li class="nav-item menu-open">
-                     <a href="#" class="nav-link active">
+                 <li class="nav-item">
+                     <a href="{{ route('dashboard') }}"
+                         class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                          <i class="nav-icon fas fa-tachometer-alt"></i>
                          <p>
                              Dashboard
@@ -33,37 +34,22 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link">
-                         <i class="nav-icon fas fa-motorcycle"></i>
-                         <p>
-                             Kendaraan
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="#" class="nav-link">
+                     <a href="{{ route('relay.index') }}" class="nav-link {{ request()->is('relay') ? 'active' : '' }}">
                          <i class="nav-icon fas fa-table"></i>
                          <p>
-                             History
+                             Management Sensor
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="#" class="nav-link">
+                     <a href="{{ route('location.index') }}" class="nav-link {{ request()->is(['location*',]) ? 'active' : '' }}">
                          <i class="nav-icon fas fa-map-marker-alt"></i>
                          <p>
-                             Batas Area
+                             Lokasi
                          </p>
                      </a>
                  </li>
-                 <li class="nav-item">
-                     <a href="#" class="nav-link">
-                         <i class="nav-icon fas fa-users"></i>
-                         <p>
-                             Management User
-                         </p>
-                     </a>
-                 </li>
+
                  <li class="nav-item">
                      <a href="javascript:void(0);" class="nav-link"
                          onclick="document.querySelector('#form-logout').submit()">

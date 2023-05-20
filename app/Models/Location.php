@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Location extends Model
 {
     use HasFactory;
-    protected $table = 'locations';
+    protected $table = 'gps';
 
-    /**
-     * Get the vehicle that owns the location.
-     */
-    public function vehicle(): BelongsTo
-    {
-        return $this->belongsTo(Vehicle::class);
-    }
+    // /**
+    //  * Get the vehicle that owns the location.
+    //  */
+    // public function vehicle(): BelongsTo
+    // {
+    //     return $this->belongsTo(Vehicle::class);
+    // }
 }

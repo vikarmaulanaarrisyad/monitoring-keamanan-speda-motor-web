@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Location;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,36 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        return view('location.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function data()
+    {
+        $query = Location::all();
+
+        return datatables($query)
+            ->addIndexColumn()
+            ->addColumn('tanggal', function ($query) {
+                return tanggal_indonesia($query->created_at);
+            })
+            ->addColumn('waktu', function ($query) {
+                return Carbon::parse($query->created_at)->diffForHumans();
+            })
+            ->addColumn('lokasi', function ($query) {
+                //
+            })
+            ->addColumn('aksi', function ($query) {
+                return '
+                    <div class="btn-group">
+                    <a target="_blank" href="'.url('https://www.google.com/maps?q='.$query->latitude.''.$query->longitude.'').'" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
+                    </div>
+                    ';
+            })
+            ->escapeColumns([])
+            ->make(true);
     }
 
     /**
@@ -42,9 +72,9 @@ class LocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Location $location)
+    public function detail($id)
     {
-        //
+        return view ('location.detail');
     }
 
     /**
