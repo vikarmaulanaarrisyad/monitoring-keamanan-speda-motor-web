@@ -118,12 +118,12 @@ class RelayController extends Controller
     {
         $relay = Relay::findOrfail($id);
 
-        if ($relay->status == 0) {
+        if ($relay->status == 1) {
             // return response()->json(['message' =>  $user->name . ' status aktif.'], 401);
-            $relay->update(['status' => 1]);
+            $relay->update(['status' => 0]);
             return response()->json(['message' =>  $relay->name_relay . ' berhasil disimpan.'], 200);
         } else {
-            $relay->update(['status' => 0]);
+            $relay->update(['status' => 1]);
             return response()->json(['message' =>  $relay->name_relay . ' berhasil disimpan.'], 200);
         }
     }
