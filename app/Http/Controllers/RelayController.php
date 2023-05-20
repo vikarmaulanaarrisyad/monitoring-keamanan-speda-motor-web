@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RelayController extends Controller
 {
-    /** 
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -49,7 +49,7 @@ class RelayController extends Controller
                     ';
             })
             ->addColumn('aksi', function ($query) {
-                if ($query->status == 0) {
+                if ($query->status == 1) {
                     return '
                         <button onclick="updateStatus(`' . route('relay.update_status', $query->id) . '`, `' . $query->name_relay  . '`)" class="btn btn-sm btn-success"><i class="fas fa-check-circle"></i> Aktifkan!</button>
                     ';
