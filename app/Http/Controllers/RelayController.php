@@ -39,7 +39,7 @@ class RelayController extends Controller
                     ';
             })
             ->addColumn('status', function ($query) {
-                if ($query->status != 0) {
+                if ($query->status == 0) {
                     return '
                         <span class="badge badge-md badge-danger">Tidak Aktif</span>
                     ';
