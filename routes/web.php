@@ -46,6 +46,6 @@ Route::group([
         Route::resource('/location', LocationController::class);
         Route::get('/location/detail/{id}', [LocationController::class, 'detail'])->name('location.detail');
 
-        Route::get('/markers', [MapController::class, 'getMarkers']);
+        Route::get('/markers', [MapController::class, 'getMarkers'])->name('marker');
     });
 });

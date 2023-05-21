@@ -129,7 +129,7 @@
 
 @endpush --}}
 
-@push('scripts')
+{{-- @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var map = L.map('map').setView([-6.916022, 109.158922], 15);
@@ -137,6 +137,7 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
+
 
         function getMarkers() {
             $.ajax({
@@ -147,6 +148,8 @@
                     if (data.length > 0) {
                         var location = data[0];
                         var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+                        marker.bindPopup(`<b>Latitude:</b> ${location.latitude}<br><b>Longitude:</b> ${location.longitude}`);
+
 
                         var latlngs = data.map(loc => [loc.latitude, loc.longitude]);
 
@@ -178,5 +181,56 @@
         }
 
         getMarkers();
+    </script>
+
+@endpush --}}
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([-6.916022, 109.158922], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var markers = [];
+
+        function getLocations() {
+            $.ajax({
+                url: '{{ route("marker") }}',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    updateMarkers(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function updateMarkers(locations) {
+            // Hapus semua penanda yang ada
+            markers.forEach(function(marker) {
+                map.removeLayer(marker);
+            });
+
+            markers = [];
+
+            // Tambahkan penanda baru untuk setiap lokasi
+            locations.forEach(function(location) {
+                var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+                markers.push(marker);
+            });
+        }
+
+        // Perbarui lokasi setiap 5 detik
+        setInterval(getLocations, 5000);
+
+        // Pertama kali, ambil lokasi saat halaman dimuat
+        getLocations();
     </script>
 @endpush

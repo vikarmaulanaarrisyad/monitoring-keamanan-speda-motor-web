@@ -15,19 +15,33 @@ class ApiLocationController extends Controller
             'longitude' => $request->longitude,
         ];
 
-        Location::create($data);
+        // Location::create($data);
+        Location::updateOrCreate(
+            ['id' => 1],
+            [
+                'latitude' => $request->latitude,
+                'longitude' =>  $request->longitude
+            ]
+        );
+
 
         return response()->json(['message', 'Berhasil tersimpan']);
     }
 
     public function storeData(Request $request, $latitude, $longitude)
     {
-        $data = [
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-        ];
+        // $data = [
+        //     'latitude' => $latitude,
+        //     'longitude' => $longitude,
+        // ];
 
-        Location::create($data);
+        Location::updateOrCreate(
+            ['id' => 1],
+            [
+                'latitude' => $latitude,
+                'longitude' => $longitude
+            ]
+        );
 
         return response()->json(['message', 'Berhasil tersimpan']);
     }
