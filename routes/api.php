@@ -24,7 +24,7 @@ Route::get('/relay/data', [ApiRelayController::class, 'data'])->name('api.relay_
 Route::get('/relay/{id}/update', [ApiRelayController::class, 'update'])->name('api.relay_update');
 
 Route::get('/location/data',[ApiLocationController::class, 'getDataAll']);
-Route::post('/location/{latitude}/{longitude}',[ApiLocationController::class, 'store']);
+Route::post('/location/kirim_data',[ApiLocationController::class, 'store']);
 Route::post('/upload-image', function (Request $request) {
     // Validasi request
     $request->validate([
