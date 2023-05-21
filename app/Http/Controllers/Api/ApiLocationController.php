@@ -20,6 +20,18 @@ class ApiLocationController extends Controller
         return response()->json(['message', 'Berhasil tersimpan']);
     }
 
+    public function storeData(Request $request, $latitude, $longitude)
+    {
+        $data = [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+        ];
+
+        Location::create($data);
+
+        return response()->json(['message', 'Berhasil tersimpan']);
+    }
+
     public function getDataAll()
     {
         $location = Location::all();
