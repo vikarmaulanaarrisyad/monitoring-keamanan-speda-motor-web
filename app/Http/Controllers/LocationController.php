@@ -29,7 +29,7 @@ class LocationController extends Controller
                 return tanggal_indonesia($query->created_at);
             })
             ->addColumn('waktu', function ($query) {
-                return Carbon::parse($query->created_at)->diffForHumans();
+                return Carbon::parse($query->updated_at)->diffForHumans();
             })
             ->addColumn('lokasi', function ($query) {
                 //

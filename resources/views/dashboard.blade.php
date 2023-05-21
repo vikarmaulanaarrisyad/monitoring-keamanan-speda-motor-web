@@ -69,91 +69,32 @@
         </div>
     </div>
 @endsection
-{{-- @push('scripts')
+@push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
     <script>
-        var map = L.map('map').setView([-6.916022, 109.158922], 13);
+        var map = L.map('map').setView([-6.91602, 109.15892], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // var popup = L.popup()
-        //     .setLatLng([-6.916022, 109.158922])
-        //     .setContent("I am a standalone popup.")
-        //     .openOn(map);
+        var marker = null;
+        var previousLatitude = null;
 
-        function getMarkers() {
+        function getLocations() {
             $.ajax({
-                url: '/markers',
+                url: '{{ route("marker") }}',
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    data.forEach((location, index) => {
-                        var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+                    var location = data[0];
 
-                        var latlngs = data.map(loc => [loc.latitude, loc.longitude]);
-
-                        if (index === data.length - 1) {
-                            animateMarker(marker, latlngs, 1000);
-                        }
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        function animateMarker(marker, latlngs, duration) {
-            var currentIndex = 0;
-            var totalSteps = latlngs.length;
-
-            function animateStep() {
-                if (currentIndex === totalSteps) {
-                    return;
-                }
-
-                marker.setLatLng(latlngs[currentIndex]);
-                currentIndex++;
-
-                setTimeout(animateStep, duration);
-            }
-
-            animateStep();
-        }
-
-        getMarkers();
-    </script>
-
-
-@endpush --}}
-
-{{-- @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        var map = L.map('map').setView([-6.916022, 109.158922], 15);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-
-        function getMarkers() {
-            $.ajax({
-                url: '/markers',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (data.length > 0) {
-                        var location = data[0];
-                        var marker = L.marker([location.latitude, location.longitude]).addTo(map);
-                        marker.bindPopup(`<b>Latitude:</b> ${location.latitude}<br><b>Longitude:</b> ${location.longitude}`);
-
-
-                        var latlngs = data.map(loc => [loc.latitude, loc.longitude]);
-
-                        animateMarker(marker, latlngs, 1000);
+                    // Memeriksa perubahan latitude
+                    if (location.latitude !== previousLatitude) {
+                        updateMarker(location.latitude, location.longitude);
+                        previousLatitude = location.latitude;
                     }
                 },
                 error: function(xhr, status, error) {
@@ -162,35 +103,51 @@
             });
         }
 
-        function animateMarker(marker, latlngs, duration) {
-            var currentIndex = 0;
-            var totalSteps = latlngs.length;
-
-            function animateStep() {
-                if (currentIndex === totalSteps) {
-                    return;
-                }
-
-                marker.setLatLng(latlngs[currentIndex]);
-                currentIndex++;
-
-                setTimeout(animateStep, duration);
+        function updateMarker(latitude, longitude) {
+            // Menghapus marker sebelumnya jika ada
+            if (marker) {
+                map.removeLayer(marker);
             }
 
-            animateStep();
+            // Mendapatkan nama lokasi berdasarkan latitude dan longitude
+            var latlng = L.latLng(latitude, longitude);
+            var geocodeUrl = 'https://nominatim.openstreetmap.org/reverse?lat=' + latlng.lat + '&lon=' + latlng.lng + '&format=jsonv2';
+
+            // Mengirim permintaan geocoding
+            $.ajax({
+                url: geocodeUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var address = data.display_name;
+
+                    // Tambahkan marker dengan popup yang berisi nama lokasi
+                    marker = L.marker(latlng).addTo(map);
+                    marker.bindPopup(address).openPopup();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
 
-        getMarkers();
+        // Perbarui lokasi setiap 5 detik
+        setInterval(getLocations, 5000);
+
+        // Pertama kali, ambil lokasi saat halaman dimuat
+        getLocations();
     </script>
+@endpush
 
-@endpush --}}
 
-@push('scripts')
+
+
+{{-- @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
 
     <script>
-        var map = L.map('map').setView([-6.916022, 109.158922], 13);
+        var map = L.map('map').setView([-6.91602, 109.15892], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -222,8 +179,27 @@
 
             // Tambahkan penanda baru untuk setiap lokasi
             locations.forEach(function(location) {
-                var marker = L.marker([location.latitude, location.longitude]).addTo(map);
-                markers.push(marker);
+                // Mendapatkan nama lokasi berdasarkan latitude dan longitude
+                var latlng = L.latLng(location.latitude, location.longitude);
+                var geocodeUrl = 'https://nominatim.openstreetmap.org/reverse?lat=' + latlng.lat + '&lon=' + latlng.lng + '&format=jsonv2';
+
+                // Mengirim permintaan geocoding
+                $.ajax({
+                    url: geocodeUrl,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var address = data.display_name;
+
+                        // Tambahkan marker dengan popup yang berisi nama lokasi
+                        var marker = L.marker(latlng).addTo(map);
+                        marker.bindPopup(address).openPopup();
+                        markers.push(marker);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
             });
         }
 
@@ -233,4 +209,4 @@
         // Pertama kali, ambil lokasi saat halaman dimuat
         getLocations();
     </script>
-@endpush
+@endpush --}}
