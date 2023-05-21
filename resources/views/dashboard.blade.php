@@ -58,4 +58,125 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 @endsection
+{{-- @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var map = L.map('map').setView([-6.916022, 109.158922], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // var popup = L.popup()
+        //     .setLatLng([-6.916022, 109.158922])
+        //     .setContent("I am a standalone popup.")
+        //     .openOn(map);
+
+        function getMarkers() {
+            $.ajax({
+                url: '/markers',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    data.forEach((location, index) => {
+                        var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+
+                        var latlngs = data.map(loc => [loc.latitude, loc.longitude]);
+
+                        if (index === data.length - 1) {
+                            animateMarker(marker, latlngs, 1000);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function animateMarker(marker, latlngs, duration) {
+            var currentIndex = 0;
+            var totalSteps = latlngs.length;
+
+            function animateStep() {
+                if (currentIndex === totalSteps) {
+                    return;
+                }
+
+                marker.setLatLng(latlngs[currentIndex]);
+                currentIndex++;
+
+                setTimeout(animateStep, duration);
+            }
+
+            animateStep();
+        }
+
+        getMarkers();
+    </script>
+
+
+@endpush --}}
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var map = L.map('map').setView([-6.916022, 109.158922], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        function getMarkers() {
+            $.ajax({
+                url: '/markers',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.length > 0) {
+                        var location = data[0];
+                        var marker = L.marker([location.latitude, location.longitude]).addTo(map);
+
+                        var latlngs = data.map(loc => [loc.latitude, loc.longitude]);
+
+                        animateMarker(marker, latlngs, 1000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function animateMarker(marker, latlngs, duration) {
+            var currentIndex = 0;
+            var totalSteps = latlngs.length;
+
+            function animateStep() {
+                if (currentIndex === totalSteps) {
+                    return;
+                }
+
+                marker.setLatLng(latlngs[currentIndex]);
+                currentIndex++;
+
+                setTimeout(animateStep, duration);
+            }
+
+            animateStep();
+        }
+
+        getMarkers();
+    </script>
+@endpush

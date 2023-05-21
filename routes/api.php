@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiLocationController;
 use App\Http\Controllers\Api\ApiRelayController;
+use App\Http\Controllers\Api\MapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -52,3 +53,5 @@ Route::post('/upload-image', function (Request $request) {
         'image_url' => $imageUrl,
     ]);
 });
+
+

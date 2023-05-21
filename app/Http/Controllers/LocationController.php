@@ -37,7 +37,7 @@ class LocationController extends Controller
             ->addColumn('aksi', function ($query) {
                 return '
                     <div class="btn-group">
-                    <a target="_blank" href="'.url('https://www.google.com/maps?q='.$query->latitude.''.$query->longitude.'').'" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
+                        <a target="_blank" href="'.url('http://maps.google.com/maps?&z=15&mrt=yp&t=k&q='.$query->latitude.'+'.$query->longitude.'').'" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
                     </div>
                     ';
             })

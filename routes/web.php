@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     RelayController,
     VehicleController
 };
+use App\Http\Controllers\Api\MapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,8 +42,10 @@ Route::group([
         Route::resource('/relay', RelayController::class);
         Route::put('/relay/{id}/update-status', [RelayController::class, 'updateStatus'])->name('relay.update_status');
 
-        Route::get('/location/data',[LocationController::class, 'data'])->name('location.data');
+        Route::get('/location/data', [LocationController::class, 'data'])->name('location.data');
         Route::resource('/location', LocationController::class);
-        Route::get('/location/detail/{id}',[LocationController::class, 'detail'])->name('location.detail');
+        Route::get('/location/detail/{id}', [LocationController::class, 'detail'])->name('location.detail');
+
+        Route::get('/markers', [MapController::class, 'getMarkers']);
     });
 });

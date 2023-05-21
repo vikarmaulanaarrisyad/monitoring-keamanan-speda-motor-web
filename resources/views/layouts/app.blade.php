@@ -18,8 +18,14 @@
     <!-- SweetAler2 -->
     <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/sweetalert2/sweetalert2.min.css') }}">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     @stack('css_vendor')
-    
+
+
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('/AdminLTE') }}/dist/css/adminlte.min.css">
     <style>
@@ -35,6 +41,10 @@
             font-size: .6rem;
             font-weight: bold;
             color: #888;
+        }
+
+        #map {
+            height: 500px;
         }
     </style>
     @stack('css')
@@ -94,6 +104,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('/AdminLTE') }}/dist/js/adminlte.min.js"></script>
     <script src="{{ asset('/js/custom.js') }}"></script>
+
 
     @stack('scripts')
 </body>
