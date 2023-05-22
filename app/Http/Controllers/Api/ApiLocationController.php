@@ -55,26 +55,41 @@ class ApiLocationController extends Controller
 
     public function uploadPhoto(Request $request)
     {
-        // Check if a file is uploaded
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('photos', $fileName);
+        // // Check if a file is uploaded
+        // if ($request->hasFile('photo')) {
+        //     $file = $request->file('photo');
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $file->storeAs('photos', $fileName);
 
-            // Delete old photo if it exists
-            $oldPhoto = $request->input('old_photo');
-            if ($oldPhoto) {
-                Storage::delete('photos/' . $oldPhoto);
-            }
+        //     // Delete old photo if it exists
+        //     $oldPhoto = $request->input('old_photo');
+        //     if ($oldPhoto) {
+        //         Storage::delete('photos/' . $oldPhoto);
+        //     }
 
-            return response()->json([
-                'message' => 'Photo uploaded successfully',
-                'gambar' => $fileName
-            ], 200);
-        }
+        //     return response()->json([
+        //         'message' => 'Photo uploaded successfully',
+        //         'gambar' => $fileName
+        //     ], 200);
+        // }
 
         return response()->json([
             'message' => 'No photo uploaded'
         ], 400);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('images', $fileName, 'public');
+
+           $image = Location::where('id',1)->update(['gambar' => $filePath]);
+
+            return response()->json([
+                'message' => 'Image uploaded successfully.',
+                'image' => $image,
+            ], 201);
+        }
+
+        return response()->json(['message' => 'Image upload failed.'], 400);
     }
 }
