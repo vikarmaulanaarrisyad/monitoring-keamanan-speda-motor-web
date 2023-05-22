@@ -55,41 +55,27 @@ class ApiLocationController extends Controller
 
     public function uploadPhoto(Request $request)
     {
-        // // Check if a file is uploaded
-        // if ($request->hasFile('photo')) {
-        //     $file = $request->file('photo');
-        //     $fileName = time() . '_' . $file->getClientOriginalName();
-        //     $file->storeAs('photos', $fileName);
+        $request->validate([
+            'photo' => 'required|image|max:2048', // Hanya menerima file gambar dengan ukuran maksimum 2MB
+        ]);
 
-        //     // Delete old photo if it exists
-        //     $oldPhoto = $request->input('old_photo');
-        //     if ($oldPhoto) {
-        //         Storage::delete('photos/' . $oldPhoto);
-        //     }
-
-        //     return response()->json([
-        //         'message' => 'Photo uploaded successfully',
-        //         'gambar' => $fileName
-        //     ], 200);
-        // }
-
-        // return response()->json([
-        //     'message' => 'No photo uploaded'
-        // ], 400);//
-
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('images', $fileName, 'public');
+            $filePath = $file->storeAs('photos', $fileName, 'public');
 
-           $image = Location::where('id',1)->update(['gambar' => $filePath]);
+            $location = Location::where('id', 1)->first(); // Menemukan entri lokasi berdasarkan nama (ganti 'nama' dengan kriteria yang sesuai)
+            if ($location) {
+                $location->gambar = $filePath; // Mengupdate kolom gambar dengan nilai baru
+                $location->save(); // Menyimpan perubahan
 
-            return response()->json([
-                'message' => 'Image uploaded successfully.',
-                'image' => $image,
-            ], 201);
+                return response()->json([
+                    'message' => 'Photo updated successfully.',
+                    'location' => $location,
+                ], 200);
+            }
         }
 
-        return response()->json(['message' => 'Image upload failed.'], 400);
+        return response()->json(['message' => 'Photo update failed.'], 400);
     }
 }
