@@ -54,4 +54,6 @@ Route::post('/upload-image', function (Request $request) {
     ]);
 });
 
+Route::post('/upload-photo',[ApiLocationController::class, 'uploadPhoto']);
+
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ApiLocationController extends Controller
 {
@@ -50,5 +51,30 @@ class ApiLocationController extends Controller
     {
         $location = Location::all();
         return response()->json(['data' => $location]);
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+        // Check if a file is uploaded
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('photos', $fileName);
+
+            // Delete old photo if it exists
+            $oldPhoto = $request->input('old_photo');
+            if ($oldPhoto) {
+                Storage::delete('photos/' . $oldPhoto);
+            }
+
+            return response()->json([
+                'message' => 'Photo uploaded successfully',
+                'gambar' => $fileName
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'No photo uploaded'
+        ], 400);
     }
 }
