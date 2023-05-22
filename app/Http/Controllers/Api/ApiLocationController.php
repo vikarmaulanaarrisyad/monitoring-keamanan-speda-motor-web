@@ -55,9 +55,6 @@ class ApiLocationController extends Controller
 
     public function uploadPhoto(Request $request)
     {
-        $request->validate([
-            'photo' => 'required|image|max:2048', // Hanya menerima file gambar dengan ukuran maksimum 2MB
-        ]);
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
