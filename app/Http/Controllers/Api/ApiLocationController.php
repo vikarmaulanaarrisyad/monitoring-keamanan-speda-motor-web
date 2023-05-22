@@ -73,6 +73,6 @@ class ApiLocationController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Photo update failed.'], 405);
+        return response()->json(['message' => 'Photo update failed.'], 400);
     }
 }
