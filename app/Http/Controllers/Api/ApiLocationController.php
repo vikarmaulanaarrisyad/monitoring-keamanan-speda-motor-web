@@ -73,9 +73,9 @@ class ApiLocationController extends Controller
         //     ], 200);
         // }
 
-        return response()->json([
-            'message' => 'No photo uploaded'
-        ], 400);
+        // return response()->json([
+        //     'message' => 'No photo uploaded'
+        // ], 400);//
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
