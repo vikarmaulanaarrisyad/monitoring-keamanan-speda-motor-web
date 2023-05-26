@@ -76,7 +76,7 @@ class ApiLocationController extends Controller
         // return response()->json(['message' => 'Photo update failed.'], 400);
 
         $location = Location::where('id', 1)->first();
-        $data = $request->except('photo');
+        // $data = $request->except('photo');
         if ($request->hasFile('photo')) {
             if (Storage::disk('public')->exists($location->photo)) {
                 Storage::disk('public')->delete($location->photo);
