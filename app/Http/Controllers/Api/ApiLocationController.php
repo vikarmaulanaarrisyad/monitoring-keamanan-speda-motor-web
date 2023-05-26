@@ -63,6 +63,10 @@ class ApiLocationController extends Controller
 
             $location = Location::where('id', 1)->first(); // Menemukan entri lokasi berdasarkan nama (ganti 'nama' dengan kriteria yang sesuai)
             if ($location) {
+                // Menghapus file lama jika ada
+                if ($location->gambar) {
+                    Storage::disk('public')->delete($location->gambar);
+                }
                 $location->gambar = $filePath; // Mengupdate kolom gambar dengan nilai baru
                 $location->save(); // Menyimpan perubahan
 
