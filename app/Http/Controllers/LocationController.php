@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LocationController extends Controller
 {
@@ -34,10 +35,15 @@ class LocationController extends Controller
             ->addColumn('lokasi', function ($query) {
                 //
             })
+            ->addColumn('gambar', function ($query) {
+                return '
+                    <img src="' . Storage::url($query->gambar) . '" class="img-thumbnail">
+                ';
+            })
             ->addColumn('aksi', function ($query) {
                 return '
                     <div class="btn-group">
-                        <a target="_blank" href="'.url('http://maps.google.com/maps?&z=15&mrt=yp&t=k&q='.$query->latitude.'+'.$query->longitude.'').'" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
+                        <a target="_blank" href="' . url('http://maps.google.com/maps?&z=15&mrt=yp&t=k&q=' . $query->latitude . '+' . $query->longitude . '') . '" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
                     </div>
                     ';
             })
@@ -74,7 +80,7 @@ class LocationController extends Controller
      */
     public function detail($id)
     {
-        return view ('location.detail');
+        return view('location.detail');
     }
 
     /**

@@ -18,6 +18,7 @@
                             <th>Tanggal</th>
                             <th>Waktu</th>
                             <th>Lokasi</th>
+                            <th>Gambar</th>
                             <th>Aksi</th>
                         </tr>
                     </x-slot>
@@ -64,6 +65,9 @@
                 },
                 {
                     data: 'lokasi'
+                },
+                {
+                    data: 'gambar'
                 },
                 {
                     data: 'aksi',
