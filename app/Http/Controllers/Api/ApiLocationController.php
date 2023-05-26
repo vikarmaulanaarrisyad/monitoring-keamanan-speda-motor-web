@@ -56,23 +56,35 @@ class ApiLocationController extends Controller
     public function uploadPhoto(Request $request)
     {
 
+        // if ($request->hasFile('photo')) {
+        //     $file = $request->file('photo');
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $filePath = $file->storeAs('photos', $fileName, 'public');
+
+        //     $location = Location::where('id', 1)->first(); // Menemukan entri lokasi berdasarkan nama (ganti 'nama' dengan kriteria yang sesuai)
+        //     if ($location) {
+        //         $location->gambar = $filePath; // Mengupdate kolom gambar dengan nilai baru
+        //         $location->save(); // Menyimpan perubahan
+
+        //         return response()->json([
+        //             'message' => 'Photo updated successfully.',
+        //             'location' => $location,
+        //         ], 200);
+        //     }
+        // }
+
+        // return response()->json(['message' => 'Photo update failed.'], 400);
+
+        $location = Location::where('id', 1)->first();
+        $data = $request->except('photo');
         if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('photos', $fileName, 'public');
-
-            $location = Location::where('id', 1)->first(); // Menemukan entri lokasi berdasarkan nama (ganti 'nama' dengan kriteria yang sesuai)
-            if ($location) {
-                $location->gambar = $filePath; // Mengupdate kolom gambar dengan nilai baru
-                $location->save(); // Menyimpan perubahan
-
-                return response()->json([
-                    'message' => 'Photo updated successfully.',
-                    'location' => $location,
-                ], 200);
+            if (Storage::disk('public')->exists($location->photo)) {
+                Storage::disk('public')->delete($location->photo);
             }
+
+            $data['photo'] = upload('campaign', $request->file('photo'), 'photo');
         }
 
-        return response()->json(['message' => 'Photo update failed.'], 400);
+        $location->update($data);
     }
 }
