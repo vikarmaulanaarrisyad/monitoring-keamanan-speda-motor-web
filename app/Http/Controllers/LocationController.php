@@ -37,7 +37,7 @@ class LocationController extends Controller
             })
             ->addColumn('gambar', function ($query) {
                 return '
-                    <img src="' . Storage::url($query->gambar) . '" class="img-thumbnail">
+                    <img src="' . Storage::disk('public')->url($query->gambar) . '" class="img-thumbnail">
                 ';
             })
             ->addColumn('aksi', function ($query) {
