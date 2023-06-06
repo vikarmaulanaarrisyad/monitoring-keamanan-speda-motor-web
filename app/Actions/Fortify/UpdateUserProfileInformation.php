@@ -2,8 +2,11 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -17,25 +20,36 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
-        Validator::make($input, [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-        ])->validateWithBag('updateProfileInformation');
+            'avatar' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+        ];
 
-        if (isset($input['photo'])) {
-            $user->updateProfilePhoto($input['photo']);
+        $validated = Validator::make($input, $rules);
+
+        if ($validated->fails()) {
+            back()
+                ->withInput()
+                ->withErrors($validated->errors());
+            return;
+
+            Session::flash('error', true);
+            Session::flash('message', 'Terjadi kesalahan validasi inputan');
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
-            $this->updateVerifiedUser($user, $input);
-        } else {
-            $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
-            ])->save();
+        if (isset($input['avatar'])) {
+            if (Storage::disk('public')->exists($user['avatar'])) {
+                Storage::disk('public')->delete($user['avatar']);
+            }
+
+            $input['avatar'] = upload('avatar', $input['avatar'], 'avatar');
         }
+
+        $user->update($input);
+
+        Session::flash('message', 'Profil berhasil diperbarui');
+        Session::flash('success', true);
     }
 
     /**

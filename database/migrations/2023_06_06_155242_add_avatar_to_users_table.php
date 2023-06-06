@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('locations', function (Blueprint $table) {
-
-            $table->foreign('vehicle_id')
-                ->references('id')
-                ->on('vehicle')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('avatar')->default('logo.png');
         });
     }
 
@@ -26,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('locations', function (Blueprint $table) {
-            $table->dropForeign('locations_vehicle_id_foreign');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('avatar');
         });
     }
 };

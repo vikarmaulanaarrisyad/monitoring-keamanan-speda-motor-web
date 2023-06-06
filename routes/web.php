@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     DashboardController,
     LocationController,
     RelayController,
+    SettingController,
     VehicleController
 };
 use App\Http\Controllers\Api\MapController;
@@ -47,5 +48,10 @@ Route::group([
         Route::get('/location/detail/{id}', [LocationController::class, 'detail'])->name('location.detail');
 
         Route::get('/markers', [MapController::class, 'getMarkers'])->name('marker');
+
+        Route::get('/setting', [SettingController::class, 'index'])
+        ->name('setting.index');
+        Route::put('/setting/{setting}', [SettingController::class, 'update'])
+        ->name('setting.update');
     });
 });

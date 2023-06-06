@@ -1,95 +1,64 @@
-<x-form-section submit="updateProfileInformation">
-    <x-slot name="title">
-        {{ __('Profile Information') }}
-    </x-slot>
+<form action="{{ route('user-profile-information.update') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('put')
 
-    <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
-    </x-slot>
-
-    <x-slot name="form">
-        <!-- Profile Photo -->
-        @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-            <div x-data="{photoName: null, photoPreview: null}" class="col-span-6 sm:col-span-4">
-                <!-- Profile Photo File Input -->
-                <input type="file" class="hidden"
-                            wire:model="photo"
-                            x-ref="photo"
-                            x-on:change="
-                                    photoName = $refs.photo.files[0].name;
-                                    const reader = new FileReader();
-                                    reader.onload = (e) => {
-                                        photoPreview = e.target.result;
-                                    };
-                                    reader.readAsDataURL($refs.photo.files[0]);
-                            " />
-
-                <x-label for="photo" value="{{ __('Photo') }}" />
-
-                <!-- Current Profile Photo -->
-                <div class="mt-2" x-show="! photoPreview">
-                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
+    <x-card>
+        <div class="row justify-content-center">
+            <div class="col-lg-4">
+                <div class="text-center">
+                    @if (Storage::disk('public')->url(auth()->user()->avatar))
+                        <img src="{{ url(auth()->user()->avatar ?? '') }}" alt=""
+                            class="img-thumbnail preview-avatar" width="200">
+                    @else
+                        <img src="{{ asset('AdminLTE/dist/img/user1-128x128.jpg') }}" alt=""
+                            class="img-thumbnail preview-avatar" width="200">
+                    @endif
                 </div>
-
-                <!-- New Profile Photo Preview -->
-                <div class="mt-2" x-show="photoPreview" style="display: none;">
-                    <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
-                          x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
-                    </span>
+                <div class="form-group mt-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="avatar" name="avatar"
+                            onchange="preview('.preview-avatar', this.files[0])">
+                        <label class="custom-file-label" for="avatar">Choose file</label>
+                    </div>
                 </div>
-
-                <x-secondary-button class="mt-2 mr-2" type="button" x-on:click.prevent="$refs.photo.click()">
-                    {{ __('Select A New Photo') }}
-                </x-secondary-button>
-
-                @if ($this->user->profile_photo_path)
-                    <x-secondary-button type="button" class="mt-2" wire:click="deleteProfilePhoto">
-                        {{ __('Remove Photo') }}
-                    </x-secondary-button>
-                @endif
-
-                <x-input-error for="photo" class="mt-2" />
             </div>
-        @endif
-
-        <!-- Name -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autocomplete="name" />
-            <x-input-error for="name" class="mt-2" />
         </div>
 
-        <!-- Email -->
-        <div class="col-span-6 sm:col-span-4">
-            <x-label for="email" value="{{ __('Email') }}" />
-            <x-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" autocomplete="username" />
-            <x-input-error for="email" class="mt-2" />
-
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
-                <p class="text-sm mt-2">
-                    {{ __('Your email address is unverified.') }}
-
-                    <button type="button" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" wire:click.prevent="sendEmailVerification">
-                        {{ __('Click here to re-send the verification email.') }}
-                    </button>
-                </p>
-
-                @if ($this->verificationLinkSent)
-                    <p class="mt-2 font-medium text-sm text-green-600">
-                        {{ __('A new verification link has been sent to your email address.') }}
-                    </p>
-                @endif
-            @endif
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="name">Nama</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                        id="name" value="{{ old('name') ?? auth()->user()->name }}" autocomplete="off">
+                    @error('name')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                        id="email" value="{{ old('email') ?? auth()->user()->email }}" autocomplete="off">
+                    @error('name')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <label for="role">Role</label>
+                <input type="text" class="form-control @error('role') is-invalid @enderror" name="role"
+                    id="role" value="{{ old('role') ?? auth()->user()->role->name }}" disabled>
+                @error('role')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
         </div>
-    </x-slot>
+        <x-slot name="footer">
+            <button type="reset" class="btn btn-dark">Reset</button>
+            <button class="btn btn-primary">Simpan</button>
+        </x-slot>
+    </x-card>
+</form>
 
-    <x-slot name="actions">
-        <x-action-message class="mr-3" on="saved">
-            {{ __('Saved.') }}
-        </x-action-message>
-
-        <x-button wire:loading.attr="disabled" wire:target="photo">
-            {{ __('Save') }}
-        </x-button>
-    </x-slot>
-</x-form-section>
+@includeIf('includes.datepicker')
