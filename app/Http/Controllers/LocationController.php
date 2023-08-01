@@ -97,9 +97,10 @@ class LocationController extends Controller
      */
     public function destroy(Location $location)
     {
-
-        if (Storage::disk('public')->exists($location->gambar)) {
-            Storage::disk('public')->delete($location->gambar);
+        if ($location->gambar === NULL) {
+            if (Storage::disk('public')->exists($location->gambar)) {
+                Storage::disk('public')->delete($location->gambar);
+            }
         }
 
         $location->delete();

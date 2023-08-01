@@ -10,7 +10,7 @@ class MapController extends Controller
 {
     public function getMarkers()
     {
-        $locations = Location::all();
+        $locations = Location::latest()->get();
 
         $markers = [];
         foreach ($locations as $location) {

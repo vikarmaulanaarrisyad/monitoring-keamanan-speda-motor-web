@@ -39,7 +39,7 @@
 
         function getLocations() {
             $.ajax({
-                url: '{{ route("marker") }}',
+                url: '{{ route('marker') }}',
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -65,7 +65,8 @@
 
             // Mendapatkan nama lokasi berdasarkan latitude dan longitude
             var latlng = L.latLng(latitude, longitude);
-            var geocodeUrl = 'https://nominatim.openstreetmap.org/reverse?lat=' + latlng.lat + '&lon=' + latlng.lng + '&format=jsonv2';
+            var geocodeUrl = 'https://nominatim.openstreetmap.org/reverse?lat=' + latlng.lat + '&lon=' + latlng.lng +
+                '&format=jsonv2';
 
             // Mengirim permintaan geocoding
             $.ajax({
