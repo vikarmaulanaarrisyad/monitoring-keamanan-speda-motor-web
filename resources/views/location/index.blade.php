@@ -81,6 +81,55 @@
 
 @push('scripts')
     <script>
+function deleteData(url, name) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: true,
+            })
+            swalWithBootstrapButtons.fire({
+                title: 'Apakah anda yakin?',
+                text: 'Anda akan menghapus data!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Iya, Hapus!',
+                cancelButtonText: 'Batalkan',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(url, {
+                            '_method': 'delete'
+                        })
+                        .done(response => {
+                            if (response.status = 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.message,
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                })
+                                table.ajax.reload();
+                            }
+                        })
+                        .fail(errors => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Opps! Gagal!',
+                                text: errors.responseJSON.message,
+                                showConfirmButton: false,
+                                timer: 3000
+                            })
+                            table.ajax.reload();
+                        });
+                }
+            })
+        }
+
         function updateStatus(url, name) {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {

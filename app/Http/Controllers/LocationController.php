@@ -43,7 +43,8 @@ class LocationController extends Controller
             ->addColumn('aksi', function ($query) {
                 return '
                     <div class="btn-group">
-                        <a target="_blank" href="' . url('http://maps.google.com/maps?&z=15&mrt=yp&t=k&q=' . $query->latitude . '+' . $query->longitude . '') . '" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Lihat Google Maps</a>
+                        <a target="_blank" href="' . url('http://maps.google.com/maps?&z=15&mrt=yp&t=k&q=' . $query->latitude . '+' . $query->longitude . '') . '" class="btn btn-sm btn-success"><i class="fas fa-map-marker-alt"></i> Maps</a>
+                        <button onclick="deleteData(`' . route('location.destroy', $query->id) . '`)" class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i>Hapus</button>
                     </div>
                     ';
             })
@@ -96,6 +97,13 @@ class LocationController extends Controller
      */
     public function destroy(Location $location)
     {
-        //
+
+        if (Storage::disk('public')->exists($location->gambar)) {
+            Storage::disk('public')->delete($location->gambar);
+        }
+
+        $location->delete();
+
+        return response()->json(['data' => null, 'message' => 'Lokasi berhasil dihapus']);
     }
 }
